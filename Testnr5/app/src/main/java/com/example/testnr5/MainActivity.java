@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        saveImage = (Button) findViewById(R.id.saveButton);
+//        saveImage = (Button) findViewById(R.id.saveButton);
         selectImage = (Button) findViewById(R.id.btnImageGallery);
 
         imageView = (ImageView) findViewById(R.id.chooseImage);
@@ -103,6 +103,12 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, SecondActivity.class);
         i.putExtra("resId", R.drawable.bestpicever);
         startActivity(i);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
 
