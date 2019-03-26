@@ -146,29 +146,7 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
 
 
 
-    @Override
-    public void onBrightnessChanged(final int brightness) {
-//        brightnessFinal = brightness;
-//        Filter myFilter = new Filter();
-//        myFilter.addSubFilter(new BrightnessSubFilter(brightness));
-//        imageView.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
-    }
 
-    @Override
-    public void onSaturationChanged(final float saturation) {
-//        saturationFinal = saturation;
-//        Filter myFilter = new Filter();
-//        myFilter.addSubFilter(new SaturationSubfilter(saturation));
-//        imageView.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
-    }
-
-    @Override
-    public void onContrastChanged(final float contrast) {
-//        contrastFinal = contrast;
-//        Filter myFilter = new Filter();
-//        myFilter.addSubFilter(new ContrastSubFilter(contrast));
-//        imageView.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
-    }
 
 
     @Override
