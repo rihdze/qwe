@@ -32,7 +32,7 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private EditImageFragmentListener listener;
+//    private EditImageFragmentListener listener;
     Filter myfilter;
 
 
@@ -64,23 +64,23 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
 
 
 
-    public void setListener(EditImageFragmentListener listener) {
-        this.listener = listener;
-    }
+//    public void setListener(EditImageFragmentListener listener) {
+//        this.listener = listener;
+//    }
 
     public EditImageFragment() {
 
     }
 
 
-    public static EditImageFragment newInstance(String param1, String param2) {
-        EditImageFragment fragment = new EditImageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static EditImageFragment newInstance(String param1, String param2) {
+//        EditImageFragment fragment = new EditImageFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,14 +113,14 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
 
 
         ButterKnife.bind(this, view);
-        seekBarBrightness.setMax(510);
-        seekBarBrightness.setProgress(255);
+        seekBarBrightness.setMax(200);
+        seekBarBrightness.setProgress(100);
 
         seekBarContrast.setMax(100);
-        seekBarContrast.setProgress(0);
+        seekBarContrast.setProgress(50);
 
-        seekBarSaturation.setMax(510);
-        seekBarSaturation.setProgress(255);
+        seekBarSaturation.setMax(200);
+        seekBarSaturation.setProgress(100);
 
         seekBarBrightness.setOnSeekBarChangeListener(this);
         seekBarContrast.setOnSeekBarChangeListener(this);

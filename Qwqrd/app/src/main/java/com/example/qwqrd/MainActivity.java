@@ -1,19 +1,13 @@
-package com.example.testingdropdown;
+package com.example.qwqrd;
 
-import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
+import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,40 +16,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.zomato.photofilters.imageprocessors.Filter;
-import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
-import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
-import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class MainActivity extends AppCompatActivity implements EditImageFragment.EditImageFragmentListener, CropImage.OnFragmentInteractionListener{
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
-    private TextView mTextMessage;
-
-    Bitmap bitmap;
-
-
-    @BindView(R.id.image_preview)
-    ImageView imageView;
-
+public class MainActivity extends AppCompatActivity {
+    private ImageView imageView;
+    private Bitmap bitmap;
+    private Bitmap bitmapTest;
+    private SeekBar seekBarBrightness;
+    private SeekBar seekBarContrast;
+    private PictureThread thread;
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int SELECT_A_PHOTO = 2;
 
     Button btn_take;
     Button btn_list;
-    Button btn_wallpaper;
     Button btn_load;
     ImageView imageView_photo;
 
@@ -63,46 +45,86 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.dog);
-        init();
-//        imageView = findViewById(R.id.image_preview);
-
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText("Edit Image"));
-        tabLayout.addTab(tabLayout.newTab().setText("Crop Image"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        final ViewPager viewpager = findViewById(R.id.viewpager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewpager.setAdapter(adapter);
-        viewpager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewpager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
+// PRIEKSH KAMERAS, OPEN, SAVE, DROPDOWN MENUS
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
-        ImageView img= (ImageView) findViewById(R.id.image_preview);
-        img.setImageResource(R.drawable.dog);
+
+        init();
+        ImageView iv_photo;
+        iv_photo = findViewById(R.id.image_preview);
+        Glide.with(this).load(currentPhotoPath).into(iv_photo);
+
+
+        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.dog);
+        bitmapTest = BitmapFactory.decodeFile(currentPhotoPath);
+
+
+
+
+            imageView = (ImageView) findViewById(R.id.image_preview);
+//        imageView.setImageBitmap(bitmapTest);
+            imageView.setImageBitmap(bitmap);
+
+
+//
+//        Bitmap bitmaptest = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+//        imageView.setImageBitmap(bitmaptest);
+
+
+
+
+        thread = new PictureThread(imageView,bitmap);
+        thread.start();
+
+        seekBarBrightness = (SeekBar) findViewById(R.id.seekbar_brightness);
+        seekBarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                thread.adjustBrightness(seekBar.getProgress()-255);
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+
+        });
+
+        seekBarContrast = (SeekBar) findViewById(R.id.seekbar_contrast);
+        seekBarContrast.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                thread.adjustContrast(seekBar.getProgress()-100);
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+
+        });
 
     }
 
@@ -111,25 +133,11 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-    }
-
-    @Override
-    public void onEditStarted() {
-    }
-
-    @Override
-    public void onEditCompleted() {
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_open) {
             dispatchTakePictureIntent();
             return true;
         }
@@ -138,20 +146,18 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
             galleryAddPic();
             return true;
         }
-        if (id == R.id.action_open){
+        if (id == R.id.action_settings){
             //create the intent to take a photo from the gallery
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
             //start the intent with a request code
             startActivityForResult(intent, SELECT_A_PHOTO);
             return true;
-        } if(id == R.id.WALLPAPER){
-            startWall();
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     public void initOnClickMethods(){
 
@@ -187,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
         btn_take = findViewById(R.id.action_settings);
         btn_list = findViewById(R.id.action_save);
         btn_load = findViewById(R.id.action_open);
-        btn_wallpaper = findViewById(R.id.WALLPAPER);
 
         imageView_photo = findViewById(R.id.image_preview);
     }
@@ -230,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.testingdropdown.fileprovider",
+                        "com.example.qwqrd.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
@@ -260,23 +265,4 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
-
-    public void startWall() {
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-        try {
-            wallpaperManager.setBitmap(viewToBitmap(imageView, imageView.getWidth(), imageView.getHeight()));
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Bitmap viewToBitmap(View view, int width, int height) {
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
-        return bitmap;
-    }
-
-
 }
