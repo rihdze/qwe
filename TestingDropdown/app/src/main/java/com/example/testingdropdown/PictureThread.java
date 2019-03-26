@@ -3,6 +3,7 @@ package com.example.testingdropdown;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
@@ -21,13 +22,23 @@ public class PictureThread extends Thread {
     private ColorMatrix colorMatrixBr = new ColorMatrix();
     private ColorMatrix colorMatrixCon = new ColorMatrix();
     private ColorMatrix colorMatrixSat = new ColorMatrix();
-
+    private Bitmap yoyo;
     private ColorMatrix colorMatrixConcat = new ColorMatrix();
 
     private ColorMatrixColorFilter colorMatrixColorFilter;
     private Handler handler;
     private boolean running = false;
     Matrix matrix = new Matrix();
+
+    public PictureThread(){
+
+    }
+
+    public ColorMatrixColorFilter getMatrix(){
+        return colorMatrixColorFilter;
+    }
+
+
 
     public PictureThread(ImageView imageView, Bitmap bitmap){
         this.imageView = imageView;
@@ -36,6 +47,7 @@ public class PictureThread extends Thread {
         canvas = new Canvas(temp_bitmap);
         paint = new Paint();
         handler = new Handler();
+
     }
 
     public void adjustBrightness(float brightness){
@@ -55,7 +67,8 @@ public class PictureThread extends Thread {
         colorMatrixConcat.setConcat(colorMatrixConcat, colorMatrixBr);
 
         colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrixConcat);
-        paint.setColorFilter(colorMatrixColorFilter);
+//        paint.setColorFilter(colorMatrixColorFilter);
+
         running = true;
 
     }
@@ -76,7 +89,7 @@ public class PictureThread extends Thread {
         colorMatrixConcat.setConcat(colorMatrixConcat, colorMatrixCon);
 
         colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrixConcat);
-        paint.setColorFilter(colorMatrixColorFilter);
+//        paint.setColorFilter(colorMatrixColorFilter);
         running = true;
 
     }
@@ -97,8 +110,10 @@ public class PictureThread extends Thread {
         colorMatrixConcat.setConcat(colorMatrixConcat, colorMatrixSat);
 
         colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrixConcat);
-        paint.setColorFilter(colorMatrixColorFilter);
+//        paint.setColorFilter(colorMatrixColorFilter);
         running = true;
+
+
 
     }
 
@@ -121,11 +136,18 @@ public class PictureThread extends Thread {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        imageView.setImageBitmap(temp_bitmap);
+//                        imageView.setImageBitmap(temp_bitmap);
+                        imageView.setColorFilter(colorMatrixColorFilter);
+//                        imageView.setImageBitmap(imageView.setColorFilter(colorMatrixColorFilter));
                         running = false;
                     }
                 });
+
+
+
             }
+
         }
+
     }
 }

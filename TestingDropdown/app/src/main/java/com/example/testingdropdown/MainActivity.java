@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
         }
 
         if (id == R.id.action_save) {
+
             galleryAddPic();
             return true;
         }
@@ -274,6 +278,15 @@ public class MainActivity extends AppCompatActivity implements EditImageFragment
     public static Bitmap viewToBitmap(View view, int width, int height) {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
+
+//        Matrix matrix = new Matrix();
+//        Paint paint = new Paint();
+//        paint.setColorFilter(new PictureThread().getMatrix());
+//        canvas.drawBitmap(viewToBitmap(view, width, height), 0, 0, paint);
+
+
+
+
         view.draw(canvas);
         return bitmap;
     }

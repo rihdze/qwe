@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.zomato.photofilters.imageprocessors.Filter;
+import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -130,6 +131,9 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         seekBarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+
+                Filter myFilter = new Filter();
+//                myFilter.addSubFilter(new BrightnessSubFilter());
                 thread.adjustBrightness(seekBar.getProgress()-100);
 
             }
@@ -210,6 +214,8 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
+
+
 
 
 

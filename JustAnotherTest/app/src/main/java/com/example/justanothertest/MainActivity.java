@@ -239,6 +239,13 @@ public class MainActivity extends AppCompatActivity implements FiltersListFragme
 
         if (id == R.id.action_save) {
             saveImageToGallery();
+
+
+
+
+
+
+
             return true;
         }
 
